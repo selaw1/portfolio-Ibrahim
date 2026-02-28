@@ -195,7 +195,7 @@ export default function ClubsCoaching() {
         </div>
 
         {/* ── Cards Grid ── */}
-        <div className="grid sm:grid-cols-2 gap-5 mb-20 lg:mb-28">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-20 lg:mb-28">
           {coachingTeams.map((team, i) => (
             <div
               key={i}
@@ -206,8 +206,6 @@ export default function ClubsCoaching() {
                 background: team.highlight ? 'hsl(var(--card))' : 'hsl(var(--muted)/0.4)',
                 border: `1.5px solid ${team.highlight ? 'hsl(var(--accent)/0.35)' : 'hsl(var(--border))'}`,
                 boxShadow: team.highlight ? '0 8px 40px -16px hsl(var(--accent)/0.25)' : 'none',
-                // Last card spans full width if odd total
-                gridColumn: i === coachingTeams.length - 1 && coachingTeams.length % 2 !== 0 ? 'span 2' : undefined,
               }}
             >
               {/* Top row */}
