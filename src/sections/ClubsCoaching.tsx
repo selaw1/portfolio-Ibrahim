@@ -1,123 +1,123 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { MapPin, Calendar, Users, Award, Target } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const coachingTeams = [
   {
-    name: 'Jordan National Youth Team',
+    name: 'Al Jaleel Club',
+    role: 'Head Coach',
+    location: 'Irbid, Jordan',
+    period: '2016',
+    ageGroup: 'U-14',
+    players: '20+',
+    winRate: '20%',
+    flag: '🇯🇴',
+    highlight: false,
+  },
+  {
+    name: 'Kufr Yoba Club',
+    role: 'Head Coach',
+    location: 'Irbid, Jordan',
+    period: '2018 – Present',
+    ageGroup: 'U14, U16, U18',
+    players: '150',
+    winRate: '55%',
+    flag: '🇯🇴',
+    highlight: false,
+  },
+  {
+    name: 'Jordan National Team for Schools (Girls)',
     role: 'Assistant Coach',
     location: 'Amman, Jordan',
-    period: '2020 - Present',
-    ageGroup: 'U-18',
-    achievements: [
-      'Qualified for Arab Youth Championship (2022, 2024)',
-      'Developed 15+ players who advanced to senior teams',
-      'Implemented modern training methodologies',
-      'Bronze medal at regional tournament 2023',
-    ],
-    stats: {
-      players: '25+',
-      wins: '65%',
-      tournaments: '8',
-    },
+    period: '2025',
+    ageGroup: 'U-16',
+    players: '12+',
+    winRate: '100%',
+    flag: '🇯🇴',
+    highlight: true,
   },
   {
-    name: 'Orthodox Club',
+    name: 'Promising Falcons — Jordan Olympic Committee',
+    role: 'Head Coach & Technical Supervisor, All North Centers',
+    location: 'North Jordan',
+    period: '2023 – Present',
+    ageGroup: 'U-12',
+    players: '200+',
+    winRate: '—',
+    flag: '🇯🇴',
+    highlight: true,
+  },
+  {
+    name: 'Power Team',
     role: 'Head Coach',
     location: 'Amman, Jordan',
-    period: '2017 - 2020',
-    ageGroup: 'Senior Team',
-    achievements: [
-      'Led team to First Division championship (2019)',
-      'Promoted to Premier League',
-      'Improved team performance by 40%',
-      'Coach of the Year nominee (2019)',
-    ],
-    stats: {
-      players: '18',
-      wins: '68%',
-      tournaments: '12',
-    },
-  },
-  {
-    name: 'Al-Ahli Basketball Academy',
-    role: 'Youth Coach',
-    location: 'Irbid, Jordan',
-    period: '2015 - 2017',
+    period: '2025',
     ageGroup: 'U-16',
-    achievements: [
-      'Built successful youth development program',
-      'Regional youth championship winners (2016)',
-      '20+ players promoted to senior teams',
-      'Focus on fundamental skills and discipline',
-    ],
-    stats: {
-      players: '40+',
-      wins: '62%',
-      tournaments: '15',
-    },
+    players: '12+',
+    winRate: '40%',
+    flag: '🇯🇴',
+    highlight: false,
+  },
+];
+
+const philosophyPillars = [
+  {
+    label: 'Technical Excellence',
+    detail: 'Mastery of fundamentals, systems, and game-situational intelligence.',
+    accent: 'hsl(var(--primary))',
   },
   {
-    name: 'Community Basketball Programs',
-    role: 'Volunteer Coach & Mentor',
-    location: 'Various, Jordan',
-    period: '2013 - Present',
-    ageGroup: 'All Ages',
-    achievements: [
-      'Provided free coaching to underprivileged youth',
-      'Organized community basketball camps',
-      'Mentored 100+ young players',
-      'Promoted basketball as tool for development',
-    ],
-    stats: {
-      players: '100+',
-      wins: 'N/A',
-      tournaments: '20+',
-    },
+    label: 'Mental Resilience',
+    detail: 'Training athletes to perform under pressure and bounce back from adversity.',
+    accent: 'hsl(var(--accent))',
+  },
+  {
+    label: 'Character Development',
+    detail: 'Building people of discipline, accountability, and leadership off the court.',
+    accent: '#f59e0b',
   },
 ];
 
 export default function ClubsCoaching() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const headlineRef = useRef<HTMLHeadingElement>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const sectionRef  = useRef<HTMLElement>(null);
+  const eyebrowRef  = useRef<HTMLDivElement>(null);
+  const headRef     = useRef<HTMLDivElement>(null);
+  const cardsRef    = useRef<(HTMLDivElement | null)[]>([]);
+  const philRef     = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Headline animation
-      ScrollTrigger.create({
-        trigger: headlineRef.current,
-        start: 'top 80%',
-        onEnter: () => {
-          gsap.fromTo(
-            headlineRef.current,
-            { opacity: 0, y: 30 },
-            { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }
-          );
-        },
-        once: true
-      });
+      // Header cascade
+      gsap.fromTo(
+        [eyebrowRef.current, headRef.current],
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1, y: 0, duration: 1, stagger: 0.15, ease: 'power4.out',
+          scrollTrigger: { trigger: eyebrowRef.current, start: 'top 84%', once: true },
+        }
+      );
 
-      // Cards stagger animation
+      // Cards
       cardsRef.current.forEach((card, i) => {
         if (card) {
-          ScrollTrigger.create({
-            trigger: card,
-            start: 'top 85%',
-            onEnter: () => {
-              gsap.fromTo(
-                card,
-                { opacity: 0, y: 50, scale: 0.95 },
-                { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out', delay: i * 0.1 }
-              );
-            },
-            once: true
-          });
+          gsap.fromTo(card,
+            { opacity: 0, y: 50 },
+            { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: i * 0.09,
+              scrollTrigger: { trigger: card, start: 'top 87%', once: true } }
+          );
         }
       });
+
+      // Philosophy block
+      if (philRef.current) {
+        gsap.fromTo(philRef.current,
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+            scrollTrigger: { trigger: philRef.current, start: 'top 86%', once: true } }
+        );
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -127,154 +127,308 @@ export default function ClubsCoaching() {
     <section
       id="clubs-coaching"
       ref={sectionRef}
-      className="relative py-20 lg:py-32 bg-white dark:bg-brand-black overflow-hidden transition-colors"
+      className="relative py-28 lg:py-40 overflow-hidden"
+      style={{ background: 'hsl(var(--background))' }}
     >
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.01]">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30m-20 0a20 20 0 1 0 40 0a20 20 0 1 0 -40 0' stroke='%23ff6b35' stroke-width='1' fill='none'/%3E%3C/svg%3E")`,
-          backgroundSize: '60px 60px',
-        }} />
+      {/* Noise texture */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.018]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          backgroundSize: '256px 256px',
+        }}
+      />
+
+      {/* Diagonal accent */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div
+          className="absolute"
+          style={{
+            top: '-10%', right: '-5%',
+            width: '50%', height: '120%',
+            background: 'hsl(var(--accent)/0.03)',
+            transform: 'skewX(8deg)',
+          }}
+        />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative">
-        {/* Header */}
-        <div className="text-center mb-16 lg:mb-20">
-          <h2 
-            ref={headlineRef}
-            className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-foreground mb-6"
-          >
-            Coaching <span className="bg-clip-text text-transparent bg-gradient-to-r from-accent to-brand-yellow">Experience</span>
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Building champions through mentorship, strategy, and dedication
-          </p>
+      {/* Glow blobs */}
+      <div className="pointer-events-none absolute top-0 left-0 w-[500px] h-[500px] rounded-full opacity-[0.05]"
+        style={{ background: 'radial-gradient(circle, hsl(var(--accent)) 0%, transparent 70%)', transform: 'translate(-30%, -30%)' }} />
+      <div className="pointer-events-none absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full opacity-[0.05]"
+        style={{ background: 'radial-gradient(circle, hsl(var(--primary)) 0%, transparent 70%)', transform: 'translate(30%, 30%)' }} />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 relative">
+
+        {/* ── Header ── */}
+        <div className="mb-20 lg:mb-28">
+          <div ref={eyebrowRef} className="flex items-center gap-4 mb-5" style={{ opacity: 0 }}>
+            <div className="h-px w-10" style={{ background: 'hsl(var(--accent)/0.6)' }} />
+            <span
+              className="text-xs font-bold tracking-[0.3em] uppercase"
+              style={{ color: 'hsl(var(--accent))', fontFamily: "'DM Mono', monospace" }}
+            >
+              Coaching Career
+            </span>
+          </div>
+
+          <div ref={headRef} style={{ opacity: 0 }}>
+            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+              <h2
+                className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[0.88] tracking-tight"
+                style={{ fontFamily: "'Playfair Display', Georgia, serif", color: 'hsl(var(--foreground))' }}
+              >
+                Coaching
+                <br />
+                <span style={{ WebkitTextStroke: '2px hsl(var(--accent))', color: 'transparent' }}>
+                  Experience
+                </span>
+              </h2>
+              <p
+                className="text-base leading-relaxed max-w-sm"
+                style={{ color: 'hsl(var(--muted-foreground))', fontFamily: "'Lora', Georgia, serif" }}
+              >
+                From youth academies to national programs — building champions through mentorship, strategy, and relentless dedication.
+              </p>
+            </div>
+          </div>
         </div>
 
-        {/* Coaching Positions Grid */}
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-10 mb-16">
+        {/* ── Cards Grid ── */}
+        <div className="grid sm:grid-cols-2 gap-5 mb-20 lg:mb-28">
           {coachingTeams.map((team, i) => (
             <div
               key={i}
               ref={(el) => { cardsRef.current[i] = el; }}
-              className="group relative"
+              className="group relative rounded-2xl p-6 sm:p-7 transition-all duration-400"
+              style={{
+                opacity: 0,
+                background: team.highlight ? 'hsl(var(--card))' : 'hsl(var(--muted)/0.4)',
+                border: `1.5px solid ${team.highlight ? 'hsl(var(--accent)/0.35)' : 'hsl(var(--border))'}`,
+                boxShadow: team.highlight ? '0 8px 40px -16px hsl(var(--accent)/0.25)' : 'none',
+                // Last card spans full width if odd total
+                gridColumn: i === coachingTeams.length - 1 && coachingTeams.length % 2 !== 0 ? 'span 2' : undefined,
+              }}
             >
-              <div className="relative bg-gradient-to-br from-accent/5 to-brand-yellow/5 dark:from-accent/10 dark:to-brand-yellow/10 rounded-2xl p-6 lg:p-8 border-2 border-accent/20 hover:border-accent/40 transition-all duration-500 hover:shadow-2xl hover:shadow-accent/20 h-full">
-                
-                {/* Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-2xl lg:text-3xl font-serif font-bold text-foreground mb-2 group-hover:text-accent transition-colors">
-                      {team.name}
-                    </h3>
-                    <div className="flex items-center gap-2 text-accent font-semibold mb-1">
-                      <Users className="w-4 h-4" />
-                      <span>{team.role}</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      <span className="inline-flex items-center gap-1">
-                        <Target className="w-3 h-3" />
-                        {team.ageGroup}
-                      </span>
-                    </p>
-                  </div>
-                  <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-accent to-brand-yellow rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Award className="w-7 h-7 text-white" />
-                  </div>
+              {/* Top row */}
+              <div className="flex items-start justify-between gap-3 mb-4">
+                <div className="flex-1 min-w-0">
+                  {/* Role */}
+                  <p
+                    className="text-[10px] font-bold tracking-widest uppercase mb-1.5"
+                    style={{ color: 'hsl(var(--accent))', fontFamily: "'DM Mono', monospace" }}
+                  >
+                    {team.role}
+                  </p>
+
+                  {/* Team name */}
+                  <h3
+                    className="text-xl sm:text-2xl font-bold leading-snug mb-1"
+                    style={{
+                      fontFamily: "'Playfair Display', Georgia, serif",
+                      color: 'hsl(var(--foreground))',
+                    }}
+                  >
+                    {team.name}
+                  </h3>
+
+                  {/* Age group */}
+                  <p
+                    className="text-sm"
+                    style={{ color: 'hsl(var(--primary))', fontFamily: "'DM Mono', monospace", opacity: 0.85 }}
+                  >
+                    {team.ageGroup}
+                  </p>
                 </div>
 
-                {/* Location & Period */}
-                <div className="flex flex-wrap gap-4 mb-6 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-accent" />
-                    <span>{team.location}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-brand-yellow" />
-                    <span>{team.period}</span>
-                  </div>
-                </div>
-
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-3 mb-6 p-4 bg-white/60 dark:bg-brand-dark-gray/60 rounded-xl border border-border">
-                  <div className="text-center">
-                    <div className="text-xl font-bold text-accent">{team.stats.players}</div>
-                    <div className="text-xs text-muted-foreground">Players</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xl font-bold text-brand-yellow">{team.stats.wins}</div>
-                    <div className="text-xs text-muted-foreground">Win Rate</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xl font-bold text-primary">{team.stats.tournaments}</div>
-                    <div className="text-xs text-muted-foreground">Events</div>
-                  </div>
-                </div>
-
-                {/* Achievements */}
-                <div>
-                  <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-                    <Award className="w-4 h-4 text-accent" />
-                    Achievements
-                  </h4>
-                  <ul className="space-y-2">
-                    {team.achievements.map((achievement, j) => (
-                      <li key={j} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 flex-shrink-0" />
-                        <span>{achievement}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Decorative corner */}
-                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-accent/10 to-transparent rounded-tr-2xl pointer-events-none" />
+                {/* Flag */}
+                <span className="text-2xl leading-none shrink-0 mt-1">{team.flag}</span>
               </div>
+
+              {/* Meta row */}
+              <div
+                className="flex flex-wrap items-center gap-x-4 gap-y-1 mb-4 text-xs"
+                style={{ color: 'hsl(var(--muted-foreground))', fontFamily: "'DM Mono', monospace" }}
+              >
+                <span>📍 {team.location}</span>
+                <span>🗓 {team.period}</span>
+              </div>
+
+              {/* Divider */}
+              <div className="h-px mb-4" style={{ background: 'hsl(var(--border))' }} />
+
+              {/* Stats pills */}
+              <div className="flex flex-wrap gap-2">
+                <div
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
+                  style={{
+                    background: 'hsl(var(--accent)/0.1)',
+                    color: 'hsl(var(--accent))',
+                    border: '1px solid hsl(var(--accent)/0.2)',
+                    fontFamily: "'DM Mono', monospace",
+                  }}
+                >
+                  <span>👤</span>
+                  <span>{team.players} players</span>
+                </div>
+                {team.winRate !== '—' && (
+                  <div
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
+                    style={{
+                      background: 'hsl(var(--primary)/0.1)',
+                      color: 'hsl(var(--primary))',
+                      border: '1px solid hsl(var(--primary)/0.2)',
+                      fontFamily: "'DM Mono', monospace",
+                    }}
+                  >
+                    <span>📈</span>
+                    <span>{team.winRate} win rate</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Hover inset glow */}
+              <div
+                className="absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-400"
+                style={{ boxShadow: 'inset 0 0 0 1px hsl(var(--accent)/0.2)' }}
+              />
             </div>
           ))}
         </div>
 
-        {/* Coaching Philosophy */}
-        <div className="max-w-4xl mx-auto">
-          <div className="relative bg-gradient-to-r from-accent/10 via-brand-yellow/10 to-primary/10 dark:from-accent/20 dark:via-brand-yellow/20 dark:to-primary/20 rounded-3xl p-8 lg:p-12 border-2 border-accent/20">
-            <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-gradient-to-br from-accent to-brand-yellow rounded-2xl flex items-center justify-center shadow-lg">
-              <Users className="w-7 h-7 text-white" />
+        {/* ── Coaching Philosophy ── */}
+        <div ref={philRef} style={{ opacity: 0 }}>
+          {/* Eyebrow */}
+          <div className="flex items-center gap-4 mb-8">
+            <div className="h-px w-10" style={{ background: 'hsl(var(--primary)/0.5)' }} />
+            <span
+              className="text-xs font-bold tracking-[0.3em] uppercase"
+              style={{ color: 'hsl(var(--primary))', fontFamily: "'DM Mono', monospace" }}
+            >
+              Philosophy
+            </span>
+          </div>
+
+          <div className="grid lg:grid-cols-[1fr_1px_1fr] gap-0 items-start">
+            {/* Left: quote */}
+            <div className="lg:pr-12 pb-10 lg:pb-0">
+              <div
+                className="text-7xl leading-none mb-4 select-none"
+                style={{ color: 'hsl(var(--accent)/0.1)', fontFamily: "'Playfair Display', Georgia, serif" }}
+              >
+                "
+              </div>
+              <p
+                className="text-xl sm:text-2xl leading-snug mb-6"
+                style={{
+                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontStyle: 'italic',
+                  color: 'hsl(var(--foreground)/0.85)',
+                }}
+              >
+                Every player has unique potential that can be unlocked through personalized guidance and unwavering support.
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="h-px w-10" style={{ background: 'hsl(var(--accent)/0.4)' }} />
+                <span
+                  className="text-xs font-bold tracking-wider"
+                  style={{ color: 'hsl(var(--accent))', fontFamily: "'DM Mono', monospace" }}
+                >
+                  Ibrahim Alnaser
+                </span>
+              </div>
+
+              {/* Summary stats */}
+              <div className="grid grid-cols-2 gap-3 mt-8">
+                {[
+                  { value: '400+', label: 'Players Coached', color: 'hsl(var(--accent))' },
+                  { value: '11+',  label: 'Years Coaching',  color: 'hsl(var(--primary))' },
+                ].map((s, i) => (
+                  <div
+                    key={i}
+                    className="p-4 rounded-xl text-center"
+                    style={{ background: 'hsl(var(--muted)/0.5)', border: '1px solid hsl(var(--border))' }}
+                  >
+                    <div
+                      className="text-3xl font-bold"
+                      style={{ color: s.color, fontFamily: "'Playfair Display', Georgia, serif" }}
+                    >
+                      {s.value}
+                    </div>
+                    <div
+                      className="text-xs mt-1"
+                      style={{ color: 'hsl(var(--muted-foreground))', fontFamily: "'DM Mono', monospace" }}
+                    >
+                      {s.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            
-            <h3 className="text-2xl lg:text-3xl font-serif font-bold text-center text-foreground mb-6 pt-4">
-              Coaching Philosophy
-            </h3>
-            
-            <p className="text-lg text-muted-foreground text-center leading-relaxed mb-4">
-              My coaching approach centers on three pillars: <span className="text-accent font-semibold">technical excellence</span>, 
-              <span className="text-brand-yellow font-semibold"> mental resilience</span>, and 
-              <span className="text-primary font-semibold"> character development</span>. I believe every player has unique potential that can be unlocked through personalized guidance and unwavering support.
-            </p>
-            
-            <div className="grid sm:grid-cols-3 gap-6 mt-8">
-              <div className="text-center p-4 bg-white/50 dark:bg-brand-dark-gray/50 rounded-xl">
-                <div className="text-3xl font-bold text-accent mb-2">200+</div>
-                <div className="text-sm text-muted-foreground">Players Coached</div>
-              </div>
-              <div className="text-center p-4 bg-white/50 dark:bg-brand-dark-gray/50 rounded-xl">
-                <div className="text-3xl font-bold text-brand-yellow mb-2">8+</div>
-                <div className="text-sm text-muted-foreground">Championships</div>
-              </div>
-              <div className="text-center p-4 bg-white/50 dark:bg-brand-dark-gray/50 rounded-xl">
-                <div className="text-3xl font-bold text-primary mb-2">11+</div>
-                <div className="text-sm text-muted-foreground">Years Experience</div>
-              </div>
+
+            {/* Vertical divider */}
+            <div
+              className="hidden lg:block w-px mx-auto"
+              style={{
+                alignSelf: 'stretch',
+                background: 'linear-gradient(to bottom, transparent, hsl(var(--accent)/0.3) 20%, hsl(var(--border)) 50%, hsl(var(--primary)/0.3) 80%, transparent)',
+              }}
+            />
+
+            {/* Mobile divider */}
+            <div className="lg:hidden h-px w-full mb-10"
+              style={{ background: 'linear-gradient(to right, transparent, hsl(var(--border)), transparent)' }} />
+
+            {/* Right: three pillars */}
+            <div className="lg:pl-12 space-y-5">
+              {philosophyPillars.map((p, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-4 group/pillar"
+                >
+                  <div
+                    className="mt-1 w-8 h-8 rounded-lg shrink-0 flex items-center justify-center text-xs font-bold"
+                    style={{
+                      background: p.accent + '18',
+                      border: `1.5px solid ${p.accent}33`,
+                      color: p.accent,
+                      fontFamily: "'DM Mono', monospace",
+                    }}
+                  >
+                    {String(i + 1).padStart(2, '0')}
+                  </div>
+                  <div>
+                    <h4
+                      className="font-bold text-base mb-1"
+                      style={{ fontFamily: "'Playfair Display', Georgia, serif", color: 'hsl(var(--foreground))' }}
+                    >
+                      {p.label}
+                    </h4>
+                    <p
+                      className="text-sm leading-relaxed"
+                      style={{ color: 'hsl(var(--muted-foreground))', fontFamily: "'Lora', Georgia, serif" }}
+                    >
+                      {p.detail}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Decorative elements */}
-      <div className="absolute top-20 right-10 text-accent/5 dark:text-accent/10">
-        <Users className="w-32 h-32 animate-float" />
-      </div>
-      <div className="absolute bottom-20 left-10 text-brand-yellow/5 dark:text-brand-yellow/10">
-        <Award className="w-28 h-28 animate-float" style={{ animationDelay: '1s' }} />
+        {/* ── Footer rule ── */}
+        <div className="mt-20 flex items-center gap-4">
+          <div className="h-px flex-1" style={{ background: 'hsl(var(--border))' }} />
+          <p
+            className="text-xs px-4 shrink-0"
+            style={{ color: 'hsl(var(--muted-foreground))', fontFamily: "'DM Mono', monospace" }}
+          >
+            11+ years · 5 programs · Jordan & beyond
+          </p>
+          <div className="h-px flex-1" style={{ background: 'hsl(var(--border))' }} />
+        </div>
+
       </div>
     </section>
   );

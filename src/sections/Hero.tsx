@@ -1,183 +1,446 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Trophy, Users, Award, ChevronDown } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const stats = [
+  { value: '19+',  label: 'Years Playing' },
+  { value: '11+',  label: 'Years Coaching' },
+  { value: '15+',  label: 'Championships' },
+  { value: '500+', label: 'Games Played' },
+];
+
 export default function Hero() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
-  const nameRef = useRef<HTMLHeadingElement>(null);
-  const statsRef = useRef<HTMLDivElement>(null);
+  const sectionRef   = useRef<HTMLElement>(null);
+  const bgTextRef    = useRef<HTMLDivElement>(null);
+  const imageWrapRef = useRef<HTMLDivElement>(null);
+  const eyebrowRef   = useRef<HTMLDivElement>(null);
+  const nameRef      = useRef<HTMLDivElement>(null);
+  const subtitleRef  = useRef<HTMLDivElement>(null);
+  const statsRef     = useRef<HTMLDivElement>(null);
+  const ctaRef       = useRef<HTMLDivElement>(null);
+  const scrollRef    = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.3 });
+      const tl = gsap.timeline({ delay: 0.15 });
 
-      // Profile image entrance
-      tl.fromTo(
-        imageRef.current,
-        { opacity: 0, scale: 0.5, rotate: -10 },
-        { opacity: 1, scale: 1, rotate: 0, duration: 1.2, ease: 'elastic.out(1, 0.6)' }
+      // Giant background text slides in
+      tl.fromTo(bgTextRef.current,
+        { opacity: 0, x: 120 },
+        { opacity: 1, x: 0, duration: 1.4, ease: 'power4.out' }
       );
 
-      // Name entrance
-      tl.fromTo(
-        nameRef.current,
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
-        '-=0.6'
+      // Image pops in
+      tl.fromTo(imageWrapRef.current,
+        { opacity: 0, scale: 0.85, y: 30 },
+        { opacity: 1, scale: 1, y: 0, duration: 1, ease: 'power3.out' },
+        '-=1.0'
       );
 
-      // Stats stagger
-      tl.fromTo(
-        statsRef.current?.children || [],
-        { opacity: 0, y: 20, scale: 0.9 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'back.out(1.5)', stagger: 0.1 },
+      // Eyebrow
+      tl.fromTo(eyebrowRef.current,
+        { opacity: 0, x: -20 },
+        { opacity: 1, x: 0, duration: 0.6, ease: 'power3.out' },
+        '-=0.5'
+      );
+
+      // Name lines stagger
+      tl.fromTo(nameRef.current?.children ?? [],
+        { opacity: 0, y: 50, skewY: 3 },
+        { opacity: 1, y: 0, skewY: 0, duration: 0.8, ease: 'power4.out', stagger: 0.12 },
         '-=0.4'
       );
+
+      // Subtitle
+      tl.fromTo(subtitleRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' },
+        '-=0.3'
+      );
+
+      // Stats
+      tl.fromTo(statsRef.current?.children ?? [],
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', stagger: 0.08 },
+        '-=0.3'
+      );
+
+      // CTA
+      tl.fromTo(ctaRef.current,
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' },
+        '-=0.2'
+      );
+
+      // Scroll indicator
+      tl.fromTo(scrollRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.5 },
+        '-=0.1'
+      );
+
+      // Parallax on bg text
+      gsap.to(bgTextRef.current, {
+        yPercent: 25,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
+      });
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
-  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const scrollTo = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <section
       id="hero"
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-brand-light-bg to-brand-cream dark:from-brand-black dark:via-brand-dark-gray dark:to-black transition-colors"
+      className="relative min-h-screen flex items-center overflow-hidden"
+      style={{ background: 'hsl(var(--background))' }}
     >
-      {/* Basketball Pattern Background */}
-      <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.02]">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)`,
-          backgroundSize: '40px 40px'
-        }} />
+      {/* ── Noise texture ── */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.02]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          backgroundSize: '256px 256px',
+        }}
+      />
+
+      {/* ── Glow blobs ── */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div
+          className="absolute rounded-full"
+          style={{
+            width: '600px', height: '600px',
+            top: '-10%', right: '-5%',
+            background: 'radial-gradient(circle, hsl(var(--primary)/0.12) 0%, transparent 70%)',
+            filter: 'blur(40px)',
+          }}
+        />
+        <div
+          className="absolute rounded-full"
+          style={{
+            width: '400px', height: '400px',
+            bottom: '0%', left: '-8%',
+            background: 'radial-gradient(circle, hsl(var(--accent)/0.1) 0%, transparent 70%)',
+            filter: 'blur(40px)',
+          }}
+        />
       </div>
 
-      {/* Floating orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-1/2 right-1/3 w-80 h-80 bg-brand-yellow/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      {/* ── BIG background typography ── */}
+      <div
+        ref={bgTextRef}
+        className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 select-none leading-none"
+        style={{
+          opacity: 0,
+          fontSize: 'clamp(120px, 18vw, 260px)',
+          fontFamily: "'Playfair Display', Georgia, serif",
+          fontWeight: 900,
+          fontStyle: 'italic',
+          color: 'transparent',
+          WebkitTextStroke: '1px hsl(var(--primary)/0.07)',
+          whiteSpace: 'nowrap',
+          zIndex: 0,
+        }}
+      >
+        ALNASER
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-20 relative z-10">
-        <div className="flex flex-col items-center justify-center space-y-10">
-          
-          {/* Profile Image - Centered Round */}
-          <div
-            ref={imageRef}
-            className="relative group"
-          >
-            {/* Animated rings around image */}
-            <div className="absolute inset-0 -m-2 rounded-full bg-gradient-to-tr from-primary via-accent to-brand-yellow opacity-75 blur-md group-hover:blur-lg transition-all duration-500 animate-pulse" />
-            <div className="absolute inset-0 -m-4 rounded-full border-2 border-primary/30 animate-spin-slow" style={{ animationDuration: '20s' }} />
-            <div className="absolute inset-0 -m-8 rounded-full border border-accent/20 animate-spin-slow" style={{ animationDuration: '15s', animationDirection: 'reverse' }} />
-            
-            {/* Image container */}
-            <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-full overflow-hidden border-4 border-white dark:border-brand-dark-gray shadow-2xl shadow-primary/30">
-              <img
-                src="/profile_pic.jpeg"
-                alt="Ibrahim Alnaser Basketball Player & Coach"
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-              />
-              {/* Overlay gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            </div>
+      {/* ── Top decorative line ── */}
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-px"
+        style={{
+          height: '80px',
+          background: 'linear-gradient(to bottom, transparent, hsl(var(--primary)/0.4))',
+        }}
+      />
 
-            {/* Jersey Number Badge */}
-            <div className="absolute -bottom-2 -right-2 w-16 h-16 bg-primary rounded-full flex items-center justify-center shadow-lg border-4 border-white dark:border-brand-dark-gray group-hover:scale-110 transition-transform duration-300">
-              <span className="text-2xl font-bold text-white">#15</span>
-            </div>
-          </div>
+      {/* ── Content ── */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pt-24 pb-20">
+        <div className="grid lg:grid-cols-[1fr_auto] gap-12 lg:gap-20 items-center">
 
-          {/* Name */}
-          <div className="text-center space-y-3">
-            <h1
-              ref={nameRef}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-foreground"
-            >
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-brand-yellow">
-                Ibrahim Alnaser
-              </span>
-            </h1>
-            <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-medium">
-              Professional Basketball Player & Coach
-            </p>
-          </div>
-
-          {/* Career Stats */}
-          <div
-            ref={statsRef}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 md:gap-8 w-full max-w-4xl"
-          >
-            {[
-              { icon: Trophy, number: '19+', label: 'Years Playing', color: 'from-primary to-accent' },
-              { icon: Users, number: '11+', label: 'Years Coaching', color: 'from-accent to-brand-yellow' },
-              { icon: Award, number: '15+', label: 'Championships', color: 'from-brand-yellow to-primary' },
-              { icon: Trophy, number: '500+', label: 'Games Played', color: 'from-primary to-accent' },
-            ].map((stat, i) => (
+          {/* Left: text content */}
+          <div>
+            {/* Eyebrow */}
+            <div ref={eyebrowRef} className="flex items-center gap-3 mb-8" style={{ opacity: 0 }}>
               <div
-                key={i}
-                className="relative group p-6 rounded-2xl bg-white/80 dark:bg-brand-dark-gray/80 backdrop-blur-sm border border-border hover:border-primary/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary/20"
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-sm"
+                style={{ background: 'hsl(var(--primary)/0.1)', border: '1.5px solid hsl(var(--primary)/0.2)' }}
               >
-                {/* Background gradient effect */}
-                <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
-                
-                <div className="relative z-10 flex flex-col items-center space-y-2">
-                  <stat.icon className="w-8 h-8 text-primary mb-1 group-hover:scale-110 transition-transform duration-300" />
-                  <div className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-primary to-accent">
-                    {stat.number}
+                🏀
+              </div>
+              <span
+                className="text-xs font-bold tracking-[0.3em] uppercase"
+                style={{ color: 'hsl(var(--primary))', fontFamily: "'DM Mono', monospace" }}
+              >
+                Player · Coach · Leader
+              </span>
+            </div>
+
+            {/* Name */}
+            <div ref={nameRef} className="mb-6 overflow-hidden">
+              <div
+                className="block leading-[0.9] tracking-tight"
+                style={{
+                  opacity: 0,
+                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontWeight: 900,
+                  fontSize: 'clamp(52px, 9vw, 120px)',
+                  color: 'hsl(var(--foreground))',
+                }}
+              >
+                Ibrahim
+              </div>
+              <div
+                className="block leading-[0.9] tracking-tight"
+                style={{
+                  opacity: 0,
+                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontWeight: 900,
+                  fontSize: 'clamp(52px, 9vw, 120px)',
+                  WebkitTextStroke: '2px hsl(var(--primary))',
+                  color: 'transparent',
+                }}
+              >
+                Alnaser
+              </div>
+            </div>
+
+            {/* Subtitle */}
+            <div ref={subtitleRef} className="flex items-center gap-4 mb-10" style={{ opacity: 0 }}>
+              <div className="h-px w-10" style={{ background: 'hsl(var(--primary)/0.4)' }} />
+              <p
+                className="text-base sm:text-lg"
+                style={{
+                  color: 'hsl(var(--muted-foreground))',
+                  fontFamily: "'Lora', Georgia, serif",
+                  fontStyle: 'italic',
+                }}
+              >
+                Professional Basketball Player &amp; Coach, Jordan
+              </p>
+            </div>
+
+            {/* Stats row */}
+            <div ref={statsRef} className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
+              {stats.map((s, i) => (
+                <div
+                  key={i}
+                  className="py-4 px-3 rounded-xl text-center"
+                  style={{
+                    opacity: 0,
+                    background: 'hsl(var(--muted)/0.5)',
+                    border: '1px solid hsl(var(--border))',
+                  }}
+                >
+                  <div
+                    className="font-bold leading-none mb-1"
+                    style={{
+                      fontSize: 'clamp(22px, 3.5vw, 36px)',
+                      color: i % 2 === 0 ? 'hsl(var(--primary))' : 'hsl(var(--accent))',
+                      fontFamily: "'Playfair Display', Georgia, serif",
+                    }}
+                  >
+                    {s.value}
                   </div>
-                  <div className="text-xs md:text-sm text-muted-foreground font-medium text-center">
-                    {stat.label}
+                  <div
+                    className="text-[10px] leading-tight"
+                    style={{ color: 'hsl(var(--muted-foreground))', fontFamily: "'DM Mono', monospace" }}
+                  >
+                    {s.label}
                   </div>
                 </div>
+              ))}
+            </div>
+
+            {/* CTA */}
+            <div ref={ctaRef} className="flex flex-wrap items-center gap-4" style={{ opacity: 0 }}>
+              <a
+                href="#about"
+                onClick={(e) => scrollTo(e, '#about')}
+                className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full font-semibold text-white transition-all duration-300 hover:scale-[1.03] hover:shadow-xl"
+                style={{
+                  background: 'hsl(var(--primary))',
+                  boxShadow: '0 4px 24px -8px hsl(var(--primary)/0.5)',
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: '13px',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                Explore My Journey
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 1v12M1 7l6 6 6-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </a>
+
+              <a
+                href="#gallery"
+                onClick={(e) => scrollTo(e, '#gallery')}
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:scale-[1.03]"
+                style={{
+                  border: '1.5px solid hsl(var(--border))',
+                  color: 'hsl(var(--foreground))',
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: '13px',
+                  letterSpacing: '0.05em',
+                  background: 'transparent',
+                }}
+              >
+                View Gallery
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M3 7h8M9 4l3 3-3 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          {/* Right: profile image */}
+          <div ref={imageWrapRef} className="flex justify-center lg:justify-end" style={{ opacity: 0 }}>
+            <div className="relative">
+              {/* Outer decorative ring */}
+              <div
+                className="absolute rounded-full"
+                style={{
+                  inset: '-16px',
+                  border: '1px solid hsl(var(--primary)/0.15)',
+                  borderRadius: '50%',
+                }}
+              />
+              <div
+                className="absolute rounded-full"
+                style={{
+                  inset: '-36px',
+                  border: '1px dashed hsl(var(--primary)/0.08)',
+                  borderRadius: '50%',
+                }}
+              />
+
+              {/* Image */}
+              <div
+                className="relative overflow-hidden"
+                style={{
+                  width: 'clamp(240px, 28vw, 360px)',
+                  height: 'clamp(240px, 28vw, 360px)',
+                  borderRadius: '50%',
+                  border: '3px solid hsl(var(--primary)/0.3)',
+                  boxShadow: '0 24px 80px -20px hsl(var(--primary)/0.35)',
+                }}
+              >
+                <img
+                  src="/gallery13.jpeg"
+                  alt="Ibrahim Alnaser"
+                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                />
+                {/* Subtle overlay */}
+                <div
+                  className="absolute inset-0"
+                  style={{ background: 'linear-gradient(160deg, transparent 50%, hsl(var(--primary)/0.15) 100%)' }}
+                />
               </div>
-            ))}
-          </div>
 
-          {/* CTA Button */}
-          <div className="pt-6">
-            <a
-              href="#about"
-              onClick={(e) => scrollToSection(e, '#about')}
-              className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary to-accent text-white font-semibold rounded-full overflow-hidden hover:shadow-2xl hover:shadow-primary/50 transition-all duration-300 hover:scale-105"
-            >
-              <span className="relative z-10">Explore My Journey</span>
-              <ChevronDown className="w-5 h-5 relative z-10 group-hover:translate-y-1 transition-transform" />
-              <div className="absolute inset-0 bg-gradient-to-r from-accent to-brand-yellow opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </a>
-          </div>
+              {/* Jersey badge */}
+              <div
+                className="absolute -bottom-2 -right-2 w-16 h-16 rounded-full flex items-center justify-center shadow-xl"
+                style={{
+                  background: 'hsl(var(--primary))',
+                  border: '3px solid hsl(var(--background))',
+                }}
+              >
+                <span
+                  className="text-white font-bold text-lg"
+                  style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                >
+                  #15
+                </span>
+              </div>
 
-          {/* Scroll Indicator */}
-          <div className="pt-8 animate-bounce">
-            <ChevronDown className="w-6 h-6 text-primary" />
+              {/* Floating stat chip */}
+              <div
+                className="absolute -left-6 top-1/4 px-3 py-2 rounded-xl shadow-lg"
+                style={{
+                  background: 'hsl(var(--card))',
+                  border: '1px solid hsl(var(--border))',
+                  boxShadow: '0 8px 24px -8px rgba(0,0,0,0.15)',
+                }}
+              >
+                <div
+                  className="text-lg font-bold"
+                  style={{ color: 'hsl(var(--primary))', fontFamily: "'Playfair Display', Georgia, serif", lineHeight: 1 }}
+                >
+                  15+
+                </div>
+                <div
+                  className="text-[10px] mt-0.5"
+                  style={{ color: 'hsl(var(--muted-foreground))', fontFamily: "'DM Mono', monospace" }}
+                >
+                  Titles
+                </div>
+              </div>
+
+              {/* Floating stat chip 2 */}
+              <div
+                className="absolute -right-8 top-1/3 px-3 py-2 rounded-xl shadow-lg"
+                style={{
+                  background: 'hsl(var(--card))',
+                  border: '1px solid hsl(var(--border))',
+                  boxShadow: '0 8px 24px -8px rgba(0,0,0,0.15)',
+                }}
+              >
+                <div
+                  className="text-lg font-bold"
+                  style={{ color: 'hsl(var(--accent))', fontFamily: "'Playfair Display', Georgia, serif", lineHeight: 1 }}
+                >
+                  FIBA
+                </div>
+                <div
+                  className="text-[10px] mt-0.5"
+                  style={{ color: 'hsl(var(--muted-foreground))', fontFamily: "'DM Mono', monospace" }}
+                >
+                  Certified
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Corner Accents */}
-      <div className="absolute top-0 left-0 w-32 h-32 border-l-4 border-t-4 border-primary/20 rounded-tl-3xl" />
-      <div className="absolute bottom-0 right-0 w-32 h-32 border-r-4 border-b-4 border-primary/20 rounded-br-3xl" />
-      
-      {/* Basketball icon decorations */}
-      <div className="absolute top-10 right-10 text-primary/10 dark:text-primary/5">
-        <Trophy className="w-24 h-24 animate-float" />
+      {/* ── Scroll indicator ── */}
+      <div
+        ref={scrollRef}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
+        style={{ opacity: 0 }}
+        onClick={(e) => scrollTo(e as any, '#about')}
+      >
+        <span
+          className="text-[10px] tracking-[0.25em] uppercase"
+          style={{ color: 'hsl(var(--muted-foreground))', fontFamily: "'DM Mono', monospace" }}
+        >
+          Scroll
+        </span>
+        <div
+          className="w-px h-10"
+          style={{ background: 'linear-gradient(to bottom, hsl(var(--primary)/0.5), transparent)', animation: 'pulse 2s infinite' }}
+        />
       </div>
-      <div className="absolute bottom-10 left-10 text-accent/10 dark:text-accent/5">
-        <Award className="w-20 h-20 animate-float" style={{ animationDelay: '1s' }} />
-      </div>
+
+      {/* ── Bottom decorative rule ── */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-px"
+        style={{ background: 'linear-gradient(to right, transparent, hsl(var(--border)) 30%, hsl(var(--border)) 70%, transparent)' }}
+      />
     </section>
   );
 }
